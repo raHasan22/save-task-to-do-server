@@ -16,12 +16,6 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run(){
     try{
         const taskList = client.db('task-manager').collection('task-to-do');
-        
-        app.post('/tasks', async(req, res) =>{
-            const task = req.body
-            const result = await taskList.insertOne(task);
-            res.send(result);
-        })
 
         app.get('/tasks/:completed', async(req, res) => {
             const completed = req.params.completed;
@@ -30,6 +24,20 @@ async function run(){
             const result = await taskList.find(query).toArray();
             res.send(result);
         })
+
+        app.get('/task/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const task = await taskList.findOne(query);
+            res.send(task);
+        })
+        
+        app.post('/tasks', async(req, res) =>{
+            const task = req.body
+            const result = await taskList.insertOne(task);
+            res.send(result);
+        })
+
 
         app.delete('/tasks/delete/:id', async (req, res) =>{
             const id = req.params.id;
@@ -63,7 +71,7 @@ async function run(){
             const result = await taskList.updateOne(filter, updatedDoc, options);
             res.send(result);
         })
-        
+
     }
     finally{
 
