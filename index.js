@@ -17,13 +17,7 @@ async function run(){
     try{
         const taskList = client.db('task-manager').collection('task-to-do');
 
-        app.get('/tasks/:completed', async(req, res) => {
-            const completed = req.params.completed;
-            const email = req.query.email;
-            const query = {completed: completed, email: email};
-            const result = await taskList.find(query).toArray();
-            res.send(result);
-        })
+        
 
         app.get('/task/:id', async (req, res) => {
             const id = req.params.id;
